@@ -1,0 +1,133 @@
+Transform: 'AWS::Serverless-2016-10-31'
+
+
+Parameters:
+ BucketName:
+    Type: "String"
+ SampleData:   
+    Type: "String"
+    Default : "sample_data.csv"
+ LambdaCode:   
+    Type: "String"
+    Default: "lambdaCode-1.0.0.jar"  
+ SampleDataArn:
+    Type: "String" 
+    Default: 'arn:aws:s3:::{bucket_name/sample_data.csv}'
+    
+Resources:
+    
+  S3SelectLDemoLambdaFunction:
+    # This resource creates a Lambda function.
+    Type: 'AWS::Serverless::Function'
+    
+    Properties:
+    
+      Description: Lambda handler for S3 select Demo 
+      # Time out value to 15 seconds
+      Timeout: 30
+      
+      # Initial Memory size
+      MemorySize: 512
+      
+      # The location of the Lambda function code. 
+      # CloudFormation: When using with cloudformation, bucket must exists and code must be uploaded.
+      # Sam:  Builds code using maven.  Defaults to './' when used with sam. Same as CudeURI: ./
+      
+      #CodeUri: ./
+      
+      CodeUri:
+           #!Ref function allows you to fetch value 
+           #of parameters and other resources at runtime
+          Bucket: !Ref BucketName
+          Key: !Ref LambdaCode
+      
+      # This function uses Java8 runtime.
+      Runtime: java8
+        
+      # This is the Lambda function's handler.
+      Handler: com.amazonaws.samples.s3select.s3_select_demo.S3SelectDemoLambdaHandler
+      
+      #Lambda enviornment variables
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref BucketName
+          SAMPLE_DATA: !Ref SampleData
+          
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - Version: '2012-10-17' # Policy Document
+          Statement: #- Allow read only access to sample data file
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectACL
+              Resource: !Ref SampleDataArn
+      
+      # Event sources to attach to this function. In this case, we are attaching
+      # one API Gateway endpoint to the Lambda function. The function is
+      # called when a HTTP request is made to the API Gateway endpoint.
+      Events:
+        S3SelectDemoApi:
+            # Define an API Gateway endpoint that responds to HTTP POST at /s3-select-demo
+            Type: Api
+            Properties:
+                 RestApiId: !Ref ApiGatewayApi
+                 Path: /s3-select-demo
+                 Method: POST
+                 
+  ApiGatewayApi:
+     Type: AWS::Serverless::Api
+     Properties:
+       StageName: Prod
+       Variables:
+        LambdaFunctionName: !Ref S3SelectLDemoLambdaFunction
+  
+  SqlInjDetection: 
+     Type: "AWS::WAFRegional::SqlInjectionMatchSet"
+     Properties: 
+       Name: "Find SQL injections in the message body"
+       SqlInjectionMatchTuples: 
+         - 
+           FieldToMatch: 
+             Type: "BODY"
+           TextTransformation: "NONE"
+  
+  SqlInjRule: 
+     Type: "AWS::WAFRegional::Rule"
+     Properties: 
+       Name: "SqlInjRule"
+       MetricName: "SqlInjRule"
+       Predicates: 
+         - 
+           DataId: 
+             Ref: "SqlInjDetection"
+           Negated: false
+           Type: "SqlInjectionMatch"
+ 
+  S3SelectACL: 
+     Type: "AWS::WAFRegional::WebACL"
+     Properties: 
+       Name: "S3SelectACL"
+       DefaultAction: 
+         Type: "ALLOW"
+       MetricName: "S3SelectACL"
+       Rules: 
+         - 
+           Action: 
+             Type: "BLOCK"
+           Priority: 3
+           RuleId: 
+             Ref: "SqlInjRule"
+             
+  MyWebACLAssociation:
+     Type: "AWS::WAFRegional::WebACLAssociation"
+     Properties:
+       ResourceArn: !Sub arn:aws:apigateway:${AWS::Region}::/restapis/${ApiGatewayApi}/stages/Prod
+       WebACLId:
+          Ref: S3SelectACL
+ 
+Outputs:
+  ProdDataEndpoint:
+    Description: "API Prod stage endpoint"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/s3-select-demo"
+               

@@ -1,0 +1,82 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  S3SelectLDemoLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Lambda handler for S3 select Demo
+      Timeout: 30
+      MemorySize: 512
+      CodeUri: s3://s3selectdemobucket/bbbb5955c8487c52e852d26d527a6f36
+      Runtime: java8
+      Handler: com.amazonaws.samples.s3select.s3_select_demo.S3SelectDemoLambdaHandler
+      Environment:
+        Variables:
+          BUCKET_NAME: s3selectdemobucket
+          SAMPLE_DATA: sample_data.csv
+      Policies:
+      - AWSLambdaExecute
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          - s3:GetObjectACL
+          Resource: arn:aws:s3:::s3selectdemobucket/sample_data.csv
+      Events:
+        S3SelectDemoApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayApi
+            Path: /s3-select-demo
+            Method: POST
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Variables:
+        LambdaFunctionName:
+          Ref: S3SelectLDemoLambdaFunction
+  SqlInjDetection:
+    Type: AWS::WAFRegional::SqlInjectionMatchSet
+    Properties:
+      Name: Find SQL injections in the message body
+      SqlInjectionMatchTuples:
+      - FieldToMatch:
+          Type: BODY
+        TextTransformation: NONE
+  SqlInjRule:
+    Type: AWS::WAFRegional::Rule
+    Properties:
+      Name: SqlInjRule
+      MetricName: SqlInjRule
+      Predicates:
+      - DataId:
+          Ref: SqlInjDetection
+        Negated: false
+        Type: SqlInjectionMatch
+  S3SelectACL:
+    Type: AWS::WAFRegional::WebACL
+    Properties:
+      Name: S3SelectACL
+      DefaultAction:
+        Type: ALLOW
+      MetricName: S3SelectACL
+      Rules:
+      - Action:
+          Type: BLOCK
+        Priority: 3
+        RuleId:
+          Ref: SqlInjRule
+  MyWebACLAssociation:
+    Type: AWS::WAFRegional::WebACLAssociation
+    Properties:
+      ResourceArn:
+        Fn::Sub: arn:aws:apigateway:${AWS::Region}::/restapis/${ApiGatewayApi}/stages/Prod
+      WebACLId:
+        Ref: S3SelectACL
+Outputs:
+  ProdDataEndpoint:
+    Description: API Prod stage endpoint
+    Value:
+      Fn::Sub: https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/s3-select-demo
