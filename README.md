@@ -4,7 +4,8 @@ A simple Java application illustrating usage of AWS S3 Select.
 
 ## Architecture
 
-The architecture for this workshop is the following:<br>
+The architecture for this workshop is the following:
+<br>
 ![Architecture](/images/architecture2.png)
  
 
