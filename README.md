@@ -86,7 +86,7 @@ a.	Note that while the instructions specify Docker as a pre-requisite, Docker is
 Download the S3 Select demo application to your local machine and pick a region in the AWS console that matches your local configuration.
 
 1.	[Create an Amazon S3 Bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)  
-2.	Upload <b> ‘sample_data.csv’ </b>file located in project /src/test/resources directory to your Amazon S3 Bucket
+2.	Upload [sample_data.csv](/src/test/resources/sample_data.csv) file located in project /src/test/resources directory to your Amazon S3 Bucket
 3.	Before deploying the project to SAM for the first time, you'll need to update some variables with your bucket name. Please update the following in the <b>template.yaml </b>file located in the project root directory.<br>
 
 <b>a.	Update Environment variables</b> <br>
@@ -104,10 +104,11 @@ Download the S3 Select demo application to your local machine and pick a region 
 
 Go to the root folder of ‘directory search’ and run the following SAM commands to build and deploy the application. 
 
-<b>sam build</b><br>
-<b>sam package </b> --output-template packaged.yaml --s3-bucket {name_of_your_bucket}<br>
-<b>sam deploy </b> --template-file packaged.yaml --stack-name s3-select-phonebook-stack --capabilities CAPABILITY_IAM<br>
-
+```
+sam build
+sam package --output-template packaged.yaml --s3-bucket {name_of_your_bucket}
+sam deploy --template-file packaged.yaml --stack-name s3-select-phonebook-stack --capabilities CAPABILITY_IAM
+```
 ### Usage
 
 S3-select-phonebook application allows you to query a subset of data from the sample fictitious data stored in comma separated value (CSV) format. Take a look at the uploaded sample file and perform the following steps to query a subset of the data.
@@ -117,14 +118,14 @@ S3-select-phonebook application allows you to query a subset of data from the sa
 
 For example:
 
-<b>curl -d '{"name":"Sam"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};</b>
+`curl -d '{"name":"Sam"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};`
 
 The above call should return Sam’s information.
 
 ## Cleanup
 
 1.	Using AWS Console, select <b>‘CloudFormation’ </b>from the list of AWS Services.
-2.	Select the <b>Stack </b>You had created.
+2.	Select the <b>Stack </b>you created.
 3.	Click <b>‘Delete’ </b>action button to delete the stack and all associated resources. 
 
 ## License
