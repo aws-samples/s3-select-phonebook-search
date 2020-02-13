@@ -10,29 +10,29 @@ The architecture for this workshop is the following:
  
 ## Description
 
-‘Amazon S3 Select – Phonebook search’ demo showcases the power of S3 Select. S3 Select enables applications to retrieve only a subset of data from an object by using simple SQL expressions. By using S3 Select to retrieve only the data needed by your application, you can drastically improve performance and reduce cost.
+The ‘Amazon S3 Select – Phonebook search’ demo showcases the power of S3 Select. S3 Select enables applications to retrieve only a subset of data from an object by using simple SQL expressions. By using S3 Select to retrieve only the data needed by your application, you can drastically improve performance and reduce cost.
 
-This project contains [sample data](/src/test/resources/sample_data.csv) in CSV format that you can query to search for users based on name, occupation, or location. Requests are made through API Gateway via lambda to select a subset of data from the sample file. The lambda function uses Amazon S3 SDK for Java to issue the S3 Select query and returns the result back in JSON format.
+This project contains a [sample_data.csv](/src/test/resources/sample_data.csv) file in CSV format that you can query to search for users based on name, occupation, or location. Requests are made through API Gateway via lambda to select a subset of data from the sample file. The lambda function uses Amazon S3 SDK for Java to issue the S3 Select query and returns the result back in JSON format.
+
+## AWS Services and Features Used
+
+* <b>[Amazon S3](https://aws.amazon.com/s3/)</b> is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+* <b>[Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html)</b> enables applications to retrieve only a subset of data from an object by using simple SQL expressions.
+* <b>[Amazon API Gateway](https://aws.amazon.com/api-gateway/)</b> is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+* <b>[AWS Lambda](https://aws.amazon.com/lambda/)</b> lets you run code without provisioning or managing servers.
+* <b>[AWS CloudFormation](https://aws.amazon.com/cloudformation/)</b> provides a common language for you to model and provision AWS and third party application resources in your cloud environment.
 
 ## Quick Start
 
 The quick start guide is intended to deploy the sample application in your own AWS account using an AWS CloudFormation template.
 
-## AWS Services and Features Used
-
-* [Amazon S3](https://aws.amazon.com/s3/) - Amazon S3 is an object storage service that offers industry-leading scalability, data availability, security, and performance.
-* [Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html) - Amazon S3 Select enables applications to retrieve only a subset of data from an object by using simple SQL expressions.
-* [Amazon API Gateway](https://aws.amazon.com/api-gateway/) - Amazon API Gateway is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
-* [AWS Lambda](https://aws.amazon.com/lambda/) - AWS Lambda lets you run code without provisioning or managing servers.
-* [AWS CloudFormation](https://aws.amazon.com/cloudformation/) - AWS CloudFormation provides a common language for you to model and provision AWS and third party application resources in your cloud environment.
-
 ### Quick Start Setup
-1.	Sign-in to AWS or [Create an Account](https://us-west-2.console.aws.amazon.com/)
-2.	[Create an AWS S3 Bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)
-3.	Upload <b>‘sample_data.csv’</b> file located in project <b> /src/test/resources </b> directory to your Amazon S3 Bucket. 
-4.	Upload packaged code <b> ‘lambdaCode-1.0.0.jar’ </b>provided in /target directory to your Amazon S3 Bucket.
+1.	Sign-in to your existing AWS account or [Create a new AWS account](https://us-west-2.console.aws.amazon.com/)
+2.	[Create an Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)
+3.	Upload the [sample_data.csv](/src/test/resources/sample_data.csv) file located in project <b> /src/test/resources </b> directory to your S3 bucket.
+4.	Upload packaged code <b> ‘lambdaCode-1.0.0.jar’ </b>provided in /target directory to your S3 bucket.
 5.	Using AWS Console, select <b>‘CloudFormation’</b> from the list of AWS Services.
-6.	Choose <b> ‘Create Stack’. </b> 
+6.	Choose <b> ‘Create Stack’</b> .
 7.	Select <b>‘Template is ready’ </b>and <b>‘Upload a template file’</b>
 
 ![Creating a Stack ](/images/createStack.png)
@@ -60,7 +60,7 @@ S3-select-phonebook application allows you to query a subset of data from the sa
 
 For example:
 
-<b>curl -d '{"name":"Sam"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};</b>
+`curl -d '{"name":"Sam"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};`
 
 The above call should return Sam’s information.
 
@@ -85,8 +85,8 @@ a.	Note that while the instructions specify Docker as a pre-requisite, Docker is
 
 Download the S3 Select demo application to your local machine and pick a region in the AWS console that matches your local configuration.
 
-1.	[Create an Amazon S3 Bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)  
-2.	Upload [sample_data.csv](/src/test/resources/sample_data.csv) file located in project /src/test/resources directory to your Amazon S3 Bucket
+1.	[Create an Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)  
+2.	Upload [sample_data.csv](/src/test/resources/sample_data.csv) file located in project /src/test/resources directory to your Amazon S3 bucket
 3.	Before deploying the project to SAM for the first time, you'll need to update some variables with your bucket name. Please update the following in the <b>template.yaml </b>file located in the project root directory.<br>
 
 <b>a.	Update Environment variables</b> <br>
