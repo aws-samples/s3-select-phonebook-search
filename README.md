@@ -20,11 +20,11 @@ The quick start guide is intended to deploy the sample application in your own A
 
 ## AWS Services and Features Used
 
-* [Amazon S3](https://aws.amazon.com/s3/)
-* [Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html)
-* [Amazon API Gateway](https://aws.amazon.com/api-gateway/)
-* [AWS Lambda](https://aws.amazon.com/lambda/)
-* [AWS CloudFormation](https://aws.amazon.com/cloudformation/)
+* [Amazon S3](https://aws.amazon.com/s3/) - S3 is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+* [Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html) - S3 Select enables applications to retrieve only a subset of data from an object by using simple SQL expressions.
+* [Amazon API Gateway](https://aws.amazon.com/api-gateway/) - Amazon API Gateway is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+* [AWS Lambda](https://aws.amazon.com/lambda/) - AWS Lambda lets you run code without provisioning or managing servers.
+* [AWS CloudFormation](https://aws.amazon.com/cloudformation/) - AWS CloudFormation provides a common language for you to model and provision AWS and third party application resources in your cloud environment.
 
 ### Quick Start Setup
 1.	Sign-in to AWS or [Create an Account](https://us-west-2.console.aws.amazon.com/)
