@@ -29,8 +29,8 @@ The quick start guide is intended to deploy the sample application in your own A
 ### Quick Start Setup
 1.	Sign-in to your existing AWS account or [Create a new AWS account](https://us-west-2.console.aws.amazon.com/)
 2.	[Create an Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)
-3.	Upload the [sample_data.csv](/src/test/resources/sample_data.csv) file located in project <b> /src/test/resources </b> directory to your S3 bucket.
-4.	Upload packaged code <b> ‘lambdaCode-1.0.0.jar’ </b>provided in /target directory to your S3 bucket.
+3.	Upload the [sample_data.csv](/src/test/resources/sample_data.csv) file located in project [/src/test/resources](/src/test/resources) directory to your S3 bucket.
+4.	Upload packaged code <b>[lambdaCode-1.0.0.jar](/lambdaCode-1.0.0.jar)</b> provided in /target directory to your S3 bucket.
 5.	Using AWS Console, select <b>‘CloudFormation’</b> from the list of AWS Services.
 6.	Choose <b> ‘Create Stack’</b> .
 7.	Select <b>‘Template is ready’ </b>and <b>‘Upload a template file’</b>
