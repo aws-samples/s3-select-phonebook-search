@@ -10,9 +10,6 @@ Parameters:
  LambdaCode:   
     Type: "String"
     Default: "lambdaCode-1.0.0.jar"  
- SampleDataArn:
-    Type: "String" 
-    Default: 'arn:aws:s3:::{bucket_name/sample_data.csv}'
     
 Resources:
     
@@ -61,7 +58,7 @@ Resources:
               Action:
                 - s3:GetObject
                 - s3:GetObjectACL
-              Resource: !Ref SampleDataArn
+              Resource: !Join [ '', [ 'arn:aws:s3:::', !Ref BucketName, '/', !Ref SampleData ] ]
       
       # Event sources to attach to this function. In this case, we are attaching
       # one API Gateway endpoint to the Lambda function. The function is
