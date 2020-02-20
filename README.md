@@ -43,7 +43,6 @@ a.	Choose a <b>stack name</b><br>
 b.	Specify your <b>bucket name</b> (this is the bucket you created earlier)<br>
 c.	Specify the uploaded <b>lambda code </b> (this is the code you uploaded)<br>
 d.	Specify the sample <b>file name</b> (this is the sample file you uploaded)<br>
-e.	Specify the <b>file ARN </b>by replacing the values in brackets (including the brackets) with name of your bucket, slash(/) sample file name. 
 
 ![Stack Name ](/images/stackName.png)
  
