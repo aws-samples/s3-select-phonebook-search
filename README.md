@@ -2,6 +2,14 @@
   
 Amazon S3 Select - Phonebook Search is a simple serverless Java application illustrating the usage of Amazon S3 Select to execute a SQL query on a comma separated value (CSV) file stored on Amazon Simple Storage Service (Amazon S3). S3 Select does not require any database servers and runs directly on S3.
 
+Generally available in April, 2018, S3 Select and Amazon S3 Glacier Select allow customers to run SQL queries directly on data stored in S3 and Amazon S3 Glacier. Customers previously needed to deploy a database to query this data. With Amazon S3 Select, you simply store your data on S3 and query away using simple (SQL) statements to filter the contents of Amazon S3 objects and retrieve only the subset of data that you need. By retrieving only a subset of the data, customers reduce the amount of data that Amazon S3 transfers, which reduces the cost and latency to retrieve this data. 
+
+Amazon S3 Select works on objects stored in CSV, JSON, or Apache Parquet format. Amazon S3 Select also supports compression on CSV and JSON objects with GZIP or BZIP2, and server-side encrypted objects.
+
+You can perform SQL queries using AWS SDKs, the SELECT Object Content REST API, the AWS Command Line Interface (AWS CLI), or the Amazon S3 console.
+
+In addition to using Amazon S3 for storage and running SQL queries, our simple phone book application will leverage Amazon API Gateway and AWS Lambda. In this sample, will use AWS Lambda to run the Amazon S3 Select SQL query. Amazon API Gateway will be used to interact with AWS Lambda.
+
 ## Architecture
 
 The architecture for this workshop is the following:
@@ -28,21 +36,21 @@ The quick start guide is intended to deploy the sample application in your own A
 
 ### Quick Start Setup
 1.	Sign-in to your existing AWS account or [Create a new AWS account](https://us-west-2.console.aws.amazon.com/)
-2.	[Create an Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html)
+2.	[Create an Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html) and note the name of the bucket you created, as this will be used throughout this project.
 3.	Upload the [sample_data.csv](/src/test/resources/sample_data.csv) file located in project [/src/test/resources](/src/test/resources) directory to your S3 bucket.
 4.	Upload packaged code <b>[lambdaCode-1.0.0.jar](/lambdaCode-1.0.0.jar)</b> provided in /target directory to your S3 bucket.
 5.	Using AWS Console, select <b>‘CloudFormation’</b> from the list of AWS Services.
 6.	Choose <b> ‘Create Stack’</b> .
 7.	Select <b>‘Template is ready’ </b>and <b>‘Upload a template file’</b>
+8.	Choose [cloud_formation_template.yaml](cloud_formation_template.yaml) file located in project root directory and click "Next"
 
 ![Creating a Stack ](/images/createStack.png)
 
-8.	Choose <b>‘cloud_formation_template.yaml’ </b>file located in project root directory.
 9.	On the next page, specify stack details<br>
-a.	Choose a <b>stack name</b><br>
-b.	Specify your <b>bucket name</b> (this is the bucket you created earlier)<br>
+a.	Choose a <b>stack name</b><br>, such as "s3-select-phonebook-demo"
+b.	Specify your <b>bucket name</b> (this is the bucket you created previously)<br>
 c.	Specify the uploaded <b>lambda code </b> (this is the code you uploaded)<br>
-d.	Specify the sample <b>file name</b> (this is the sample file you uploaded)<br>
+d.	Specify the SampleData <b>file name</b> (this is the sample_data.csv file you uploaded previously)<br>
 
 ![Stack Name ](/images/stackName.png)
  
@@ -50,21 +58,33 @@ d.	Specify the sample <b>file name</b> (this is the sample file you uploaded)<br
 11. On the final page, acknowledge all <b>‘Transform might require access capabilities’</b>
 12. Choose <b>Create Stack</b>
 
+At this point, your stack should have completed successfully. You will see a similar screen showing the status as <b>CREATE_COMPLETE</b>.
+
+![CREATE_COMPLETE](/images/stack-created.png)
+
 ### Usage
 
 S3-select-phonebook application allows you to query a subset of data from the sample fictitious data. Take a look at the uploaded sample file and perform the following to query a subset of the data.
 
-1. Select the <b>‘Outputs’ </b>tab and copy the <b>value</b> of your API Gateway endpoint.
+1. Select the <b>‘Outputs’ </b>tab from the CloudFormation Stacks and copy the <b>value</b> of your API Gateway endpoint.
 2. Using PostMan or Curl, you can issue a command to get a subset of data.
 
 For example:
 
-`curl -d '{"name":"Sam"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};`
+`curl -d '{"name":"Jane"}' -X POST {ENTER_API_GATEWAY_ENDPOINT};`
 
-The above call should return Sam’s information.
+The above call should return Jane's information.
+
+For example in my case: 
+
+`curl -d '{"name":"Jane"}' -X POST https://3otm935he1.execute-api.us-west-2.amazonaws.com/Prod/s3-select-demo`
+
+The output is:
+
+`[{"Occupation":"Developer","PhoneNumber":"(949) 555-6704","City":"Chicago","Name":"Jane"}]`
+
 
 User interface coming soon!!
-
 
 
 ## Building from Source 
