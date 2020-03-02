@@ -146,6 +146,7 @@ The above call should return Sam’s information.
 1.	Using AWS Console, select <b>‘CloudFormation’ </b>from the list of AWS Services.
 2.	Select the <b>Stack </b>you created.
 3.	Click <b>‘Delete’ </b>action button to delete the stack and all associated resources. 
+4.  Please make sure to delete your S3 bucket and CloudWatch logs
 
 ## License
 

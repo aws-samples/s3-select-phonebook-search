@@ -5,8 +5,6 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,8 +45,6 @@ public class ApiGatewayResponse {
 
 	public static class Builder {
 
-		
-
 		private static final ObjectMapper objectMapper = new ObjectMapper();
 
 		private int statusCode = 200;
@@ -77,8 +73,8 @@ public class ApiGatewayResponse {
 		}
 
 		/**
-		 * Builds the {@link ApiGatewayResponse} using the passed object body
-		 * converted to JSON.
+		 * Builds the {@link ApiGatewayResponse} using the passed object body converted
+		 * to JSON.
 		 */
 		public Builder setObjectBody(Object objectBody) {
 			this.objectBody = objectBody;
@@ -86,9 +82,9 @@ public class ApiGatewayResponse {
 		}
 
 		/**
-		 * Builds the {@link ApiGatewayResponse} using the passed binary body
-		 * encoded as base64. {@link #setBase64Encoded(boolean)
-		 * setBase64Encoded(true)} will be in invoked automatically.
+		 * Builds the {@link ApiGatewayResponse} using the passed binary body encoded as
+		 * base64. {@link #setBase64Encoded(boolean) setBase64Encoded(true)} will be in
+		 * invoked automatically.
 		 */
 		public Builder setBinaryBody(byte[] binaryBody) {
 			this.binaryBody = binaryBody;
@@ -100,8 +96,7 @@ public class ApiGatewayResponse {
 		 * A binary or rather a base64encoded responses requires
 		 * <ol>
 		 * <li>"Binary Media Types" to be configured in API Gateway
-		 * <li>a request with an "Accept" header set to one of the "Binary Media
-		 * Types"
+		 * <li>a request with an "Accept" header set to one of the "Binary Media Types"
 		 * </ol>
 		 */
 		public Builder setBase64Encoded(boolean base64Encoded) {
@@ -117,7 +112,7 @@ public class ApiGatewayResponse {
 				try {
 					body = objectMapper.writeValueAsString(objectBody);
 				} catch (JsonProcessingException e) {
-					
+
 					throw new RuntimeException(e);
 				}
 			} else if (binaryBody != null) {
@@ -127,4 +122,3 @@ public class ApiGatewayResponse {
 		}
 	}
 }
-

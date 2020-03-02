@@ -40,7 +40,7 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 	private static final String LOCATION = "location";
 	private static final String OCCUPATION = "occupation";
 
-	//allow a-z or AZ or space character
+	// allow a-z or AZ or space character
 	private static Pattern permittedCharacters = Pattern.compile("[a-zA-Z ]+");
 
 	public S3SelectDemoLambdaHandler() {
@@ -49,8 +49,8 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 	@Override
 	public ApiGatewayResponse handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 		context.getLogger().log("Received event: " + event);
-		
-		//convert the event object to JSON
+
+		// convert the event object to JSON
 		JSONObject jsonObject = getEventData(event, context);
 
 		if (jsonObject != null) {
@@ -61,50 +61,48 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 			String query = buildQuery(name, location, occupation, context);
 
 			context.getLogger().log("query is " + query);
-			if (query != null)
-			{
+			if (query != null) {
 				SelectObjectContentRequest request = generateBaseJSONRequest(BUCKET_NAME, SAMPLE_DATA_KEY, query);
-				
+
 				try {
-	
+
 					SelectObjectContentResult result = s3Client.selectObjectContent(request);
-	
+
 					InputStream resultInputStream = result.getPayload().getRecordsInputStream();
-	
+
 					JSONParser jsonParser = new JSONParser();
-	
+
 					BufferedReader streamReader = new BufferedReader(new InputStreamReader(resultInputStream, "UTF-8"));
-	
+
 					JSONArray jsonArray = new JSONArray();
 					String inputStr;
-	
+
 					while ((inputStr = streamReader.readLine()) != null) {
-	
+
 						JSONObject data = (JSONObject) jsonParser.parse(inputStr);
 						jsonArray.add(data);
-	
+
 					}
 					return ApiGatewayResponse.builder().setStatusCode(200).setObjectBody(jsonArray)
 							.setHeaders(Collections.singletonMap("X-Powered-By", "AWS API Gateway & Lambda Serverless"))
 							.build();
-	
+
 				} catch (ParseException e) {
-				
+
 					context.getLogger().log("unable to parse sample data from S3 " + e.getMessage());
 				} catch (IOException ioe) {
 					context.getLogger().log("IOException occured when reading input stream " + ioe.getMessage());
 				} catch (Exception e) {
 					context.getLogger().log("Exception occured " + e.getMessage());
 					e.printStackTrace();
-	
+
 				}
 			}
 		}
 		JSONArray invalidResponse = new JSONArray();
 		invalidResponse.add("invalid input.  Request not processed. ");
 		return ApiGatewayResponse.builder().setStatusCode(200).setObjectBody(invalidResponse)
-				.setHeaders(Collections.singletonMap("X-Powered-By", "AWS API Gateway & Lambda Serverless"))
-				.build();
+				.setHeaders(Collections.singletonMap("X-Powered-By", "AWS API Gateway & Lambda Serverless")).build();
 	}
 
 	private JSONObject getEventData(APIGatewayProxyRequestEvent event, Context context) {
@@ -116,7 +114,7 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 		}
 
 		catch (ParseException e) {
-			
+
 			context.getLogger().log("unable to parse incoming event " + e.getMessage());
 		}
 		return null;
@@ -133,10 +131,9 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 	 * @return - S3 Select Query
 	 */
 	private String buildQuery(String name, String location, String occupation, Context context) {
-		
-		//Input validation is performed to ensure only properly formed data is used.
-		if (inputIsValid(name, location, occupation, context))
-		{
+
+		// Input validation is performed to ensure only properly formed data is used.
+		if (inputIsValid(name, location, occupation, context)) {
 			if (name != null && location != null && occupation != null) {
 				String query = "select * from s3object s where s.name like '%" + name + "%'" + " and s.City like '%"
 						+ location + "%'" + " and s.Occupation like '%" + occupation + "%'";
@@ -154,7 +151,7 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 						+ " and s.LastName like '%" + name + "%'";
 				return query;
 			} else if (name != null) {
-	
+
 				String query = "select * from s3object s where s.name like '%" + name + "%'";
 				return query;
 			} else if (location != null) {
@@ -169,41 +166,38 @@ public class S3SelectDemoLambdaHandler implements RequestHandler<APIGatewayProxy
 		context.getLogger().log("Input validation occured, unable to build query");
 		return null;
 	}
-	
+
 	/**
-	 * The purpose of this method is to ensure incoming data meets security requirements. 
-	 * Input validation is performed to ensure only properly formed data is entering the system.
-	 * allows only string characters and space.  Any other input is rejected.
+	 * The purpose of this method is to ensure incoming data meets security
+	 * requirements. Input validation is performed to ensure only properly formed
+	 * data is entering the system. allows only string characters and space. Any
+	 * other input is rejected.
+	 * 
 	 * @param name
 	 * @param location
 	 * @param occupation
 	 * @param context
 	 * @return
 	 */
-	private boolean inputIsValid(String name, String location, String occupation, Context context )
-	{
-		if (name != null && !permittedCharacters.matcher(name).matches())
-		{
+	private boolean inputIsValid(String name, String location, String occupation, Context context) {
+		if (name != null && !permittedCharacters.matcher(name).matches()) {
 			context.getLogger().log("Input validation failed for name attribute " + name);
 			context.getLogger().log("input value must be in [a-zA-Z\\\\s]");
 			return false;
 		}
-		if ( location !=null && !permittedCharacters.matcher(location).matches())
-		{
+		if (location != null && !permittedCharacters.matcher(location).matches()) {
 			context.getLogger().log("Input validation failed for location attribute " + location);
 			context.getLogger().log("input value must be in [a-zA-Z\\\\s]");
 			return false;
 		}
-		if ( occupation != null && !permittedCharacters.matcher(occupation).matches())
-		{
+		if (occupation != null && !permittedCharacters.matcher(occupation).matches()) {
 			context.getLogger().log("Input validation failed for occupation attribute " + occupation);
 			context.getLogger().log("input value must be in [a-zA-Z ]*");
 			return false;
 		}
-		//otherwise, all attributes are either null or have passed input validation
+		// otherwise, all attributes are either null or have passed input validation
 		return true;
-			
-			
+
 	}
 
 	private static SelectObjectContentRequest generateBaseJSONRequest(String bucket, String key, String query) {
