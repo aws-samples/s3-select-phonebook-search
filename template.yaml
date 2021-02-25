@@ -31,9 +31,9 @@ Resources:
       Environment:
         Variables:
           # TODO - Enter the name of your bucket.
-          BUCKET_NAME: {ENTER_BUCKET_NAME}
+          BUCKET_NAME: s3selectdemobucket
           #TODO Enter the name/location of your sample file (e.g. sample_data.csv}
-          SAMPLE_DATA: {SAMPLE_DATA.csv}        
+          SAMPLE_DATA: sample_data.csv      
           
       Policies:
         - AWSLambdaExecute # Managed Policy
@@ -45,7 +45,7 @@ Resources:
                 - s3:GetObjectACL
               #TODO - Enter the name of your S3 sample ARN (e.g. 'arn:aws:s3:::s3selectdemobucket/sample_data.csv')
               # Be sure to remove the brackets
-              Resource: 'arn:aws:s3:::{BUCKET_NAME/sample_data.csv}'
+              Resource: 'arn:aws:s3:::s3selectdemobucket/sample_data.csv'
       
       # Event sources to attach to this function. In this case, we are attaching
       # one API Gateway endpoint to the Lambda function. The function is
