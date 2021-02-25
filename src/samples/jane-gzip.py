@@ -21,5 +21,5 @@ for event in resp['Payload']:
         print(statsDetails['BytesScanned'])
         print("Stats details bytesProcessed: ")
         print(statsDetails['BytesProcessed'])
-        print("Stats details BytesReturned: ")
+        print("Stats details bytesReturned: ")
         print(statsDetails['BytesReturned'])
