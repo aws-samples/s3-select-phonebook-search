@@ -1,8 +1,13 @@
 Name,PhoneNumber,City,Occupation
-Sam,(949) 123-45567,Irvine,Solutions Architect
-Vinod,(949) 123-4556,Los Angeles,Solutions Architect
-Jeff,(949) 123-45567,Seattle,AWS Evangelist
-Jane,(949) 123-45567,Chicago,Developer
-Sean,(949) 123-45567,Chicago,Developer
-Mary,(949) 123-45567,Chicago,Developer
-Kate,(949) 123-45567,Chicago,Developer
+Sam,(949) 555-1234,Irvine,Solutions Architect
+Vinod,(310) 555-1234,Los Angeles,Solutions Architect
+Jeff,(206) 555-1234,Seattle,AWS Evangelist
+Jane,(312) 555-1234,Chicago,Developer
+Sean,(773) 555-1234,Chicago,Developer
+Mary,(708) 555-1234,Chicago,Developer
+Akira,(619) 555-1234,San Diego,Head of Marketing
+Siyang,(720) 555-1234,Denver,AWS Evangelist
+Casey,(512) 555-1234,Austin,Specialist Solutions Architect
+Katerina,(917) 555-1234,New York,Software Development Manager
+Onyx,(213) 555-1234,Los Angeles,Specialist Solutions Architect
+Jinhyun,(617) 555-1234,Boston,AWS Evangelist
